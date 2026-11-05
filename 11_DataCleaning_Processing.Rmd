@@ -1,0 +1,86 @@
+---
+title: "Cleaning and Processing: U.S. Infrastructure, Jobs, Poverty"
+output: html_document
+---
+
+## Research question
+
+Do infrastructure construction and the number of jobs predict poverty rates in the United States? We build a matched, annual U.S. dataset for 2002–2024. Highway and street construction spending is only a **proxy** for infrastructure construction.
+
+## 1. Load the raw data
+
+The four original FRED CSV files are read from `data/raw`. Copy the four CSV files downloaded from FRED into `data/raw/` before knitting this file. No download script is needed. Cleaning and annual aggregation are in one R Markdown to reduce unnecessary hand offs; each action remains in a separately explained chunk.
+
+```{r setup, message=FALSE, warning=FALSE}
+source("00_requirements.R")
+source("02_Functions.R")
+dir.create("data/processed", recursive = TRUE, showWarnings = FALSE)
+ids <- c("TLHWYCON", "PAYEMS", "PPAAUS00000A156NCEN", "CPIAUCSL")
+raw_series <- lapply(ids, read_fred)
+names(raw_series) <- ids
+```
+
+## 2. Check missing values, dates, and duplicates
+
+`read_fred` validates date parsing and checks for duplicate dates. Missing values are counted, then excluded without imputation. Original raw files remain unchanged.
+
+```{r inspect-and-clean}
+quality <- do.call(rbind, lapply(ids, function(id) {
+  x <- raw_series[[id]]
+  data.frame(series = id, rows = nrow(x),
+             missing_values = sum(is.na(x$value)),
+             first_date = as.character(min(x$date)),
+             last_date = as.character(max(x$date)))
+}))
+clean_series <- lapply(raw_series, function(x) {
+  x[!is.na(x$value) & is.finite(x$value), , drop = FALSE]
+})
+knitr::kable(quality)
+write.csv(quality, "data/processed/cleaning_diagnostics.csv", row.names = FALSE)
+```
+
+## 3. Convert monthly data to annual observations
+
+FRED `TLHWYCON` is **monthly, not seasonally adjusted spending in millions of dollars**: sum 12 months to estimate annual construction spending. `PAYEMS` is seasonally adjusted payroll employment in thousands, and `CPIAUCSL` is a monthly consumer price index: take 12-month averages. The SAIPE poverty series is already annual, in percent. Each monthly year must contain 12 valid months.
+
+```{r annualize}
+construction <- annualize_monthly(clean_series[["TLHWYCON"]], "sum")
+names(construction)[2] <- "construction_nominal_musd"
+jobs <- annualize_monthly(clean_series[["PAYEMS"]], "mean")
+names(jobs)[2] <- "jobs_thousands"
+cpi <- annualize_monthly(clean_series[["CPIAUCSL"]], "mean")
+names(cpi)[2] <- "cpi_index"
+poverty <- clean_series[["PPAAUS00000A156NCEN"]]
+poverty$year <- as.integer(format(poverty$date, "%Y"))
+poverty <- poverty[, c("year", "value")]
+names(poverty)[2] <- "poverty_pct"
+```
+
+## 4. Merge on year and construct comparable variables
+
+Retain years where all four data sources are available, from 2002 through 2024. Convert nominal construction spending into 2024 dollars using the **2024 mean CPI**. Convert payroll jobs from thousands into millions. This is a job count, not an employment rate.
+
+```{r merge-and-transform}
+full <- Reduce(function(a, b) merge(a, b, by = "year", all = FALSE),
+               list(construction, jobs, cpi, poverty))
+full <- full[full$year >= 2002 & full$year <= 2024, , drop = FALSE]
+full <- full[order(full$year), , drop = FALSE]
+ref_cpi <- full$cpi_index[full$year == 2024]
+if (length(ref_cpi) != 1L || is.na(ref_cpi)) stop("2024 CPI base year missing")
+full$construction_real_2024_musd <- full$construction_nominal_musd *
+  ref_cpi / full$cpi_index
+full$jobs_millions <- full$jobs_thousands / 1000
+for (v in setdiff(names(full), "year")) validate_annual(full[, c("year", v)], v)
+if (nrow(full) < 15L) stop("Too few matching years")
+knitr::kable(head(full), digits = 2)
+```
+
+## 5. Save the processed dataset
+
+One final CSV and one RData file capture the analysis-ready annual data, eliminating a redundant intermediate RData file. The visualization R Markdown loads the CSV. README documents this sequence.
+
+```{r save-data}
+write.csv(full, "data/processed/us_annual_2002_2024.csv", row.names = FALSE)
+save(full, file = "data/processed/22_ProcessedData.RData")
+cat("Observations:", nrow(full), "; years:", min(full$year), "to", max(full$year), "\n")
+```

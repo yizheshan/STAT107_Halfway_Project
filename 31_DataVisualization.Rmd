@@ -1,0 +1,197 @@
+
+---
+title: "Preliminary Visualizations: U.S. Infrastructure, Jobs and Poverty"
+output: pdf_document
+---
+
+## Objective
+
+This project explores whether infrastructure construction spending and the number of jobs can help predict poverty rates in the United States. We use annual data from 2002 to 2024 to examine the relationships between these variables.
+
+## Load Data
+
+First, we load the required packages and the cleaned dataset from the previous step.
+
+```{r setup, message=FALSE, warning=FALSE}
+source("00_requirements.R")
+source("02_Functions.R")
+
+data <- read.csv("data/processed/us_annual_2002_2024.csv")
+
+dir.create("figures", showWarnings = FALSE)
+dir.create("results", showWarnings = FALSE)
+
+head(data)
+```
+
+## 1. Summary Statistics
+
+We first examine the basic information about poverty rates, construction spending, and employment.
+
+```{r summary}
+summary(data)
+
+variables <- data[, c(
+  "poverty_pct",
+  "construction_real_2024_musd",
+  "jobs_millions"
+)]
+
+summary(variables)
+```
+
+The dataset contains 23 annual observations from 2002 to 2024. The poverty rate ranged from 11.9% to 15.9%, with an average of 13.57%. Real construction spending ranged from approximately $97.35 billion to $148.34 billion, while employment ranged from 130.3 million to 157.7 million jobs. These statistics show that all three variables changed over the study period, which allows us to examine their relationships.
+
+## 2. Poverty Rate Over Time
+
+We use a line graph to show how the poverty rate changed in the United States between 2002 and 2024.
+
+```{r poverty-graph}
+plot(
+  data$year,
+  data$poverty_pct,
+  type = "o",
+  pch = 16,
+  col = "blue",
+  main = "U.S. Poverty Rate (2002-2024)",
+  xlab = "Year",
+  ylab = "Poverty Rate (%)"
+)
+```
+
+The poverty rate increased from 12.1% in 2002 to a peak of 15.9% in 2011. After 2011, the poverty rate generally declined, reaching its lowest point of 11.9% in 2020. There was a small increase in 2021, but the rate remained relatively low compared with the early 2010s. In 2024, the poverty rate was 12.1%, the same as in 2002. This shows that poverty did not follow a constant upward or downward trend during the study period.
+
+## 3. Construction Spending and Poverty
+
+We create a scatterplot to examine the relationship between infrastructure construction spending and poverty rates.
+
+```{r construction-scatter}
+construction <- data$construction_real_2024_musd / 1000
+
+plot(
+  construction,
+  data$poverty_pct,
+  pch = 16,
+  col = "blue",
+  main = "Construction Spending vs Poverty",
+  xlab = "Construction Spending (Billion 2024 USD)",
+  ylab = "Poverty Rate (%)"
+)
+
+model1 <- lm(data$poverty_pct ~ construction)
+
+abline(model1, col = "red", lwd = 2)
+```
+
+The scatterplot shows a weak negative relationship between real construction spending and poverty rates. The correlation coefficient is -0.214, which suggests that higher construction spending is generally associated with slightly lower poverty rates. However, the points are widely scattered around the regression line. This means construction spending alone does not have a strong linear relationship with poverty. The graph suggests that other economic factors may play an important role in explaining poverty rates.
+
+## 4. Employment and Poverty
+
+We create another scatterplot to examine the relationship between the number of jobs and poverty rates.
+
+```{r employment-scatter}
+plot(
+  data$jobs_millions,
+  data$poverty_pct,
+  pch = 16,
+  col = "blue",
+  main = "Employment vs Poverty",
+  xlab = "Number of Jobs (Millions)",
+  ylab = "Poverty Rate (%)"
+)
+
+model2 <- lm(
+  poverty_pct ~ jobs_millions,
+  data = data
+)
+
+abline(model2, col = "red", lwd = 2)
+```
+
+The scatterplot shows a moderate negative relationship between employment and poverty rates. The correlation coefficient is -0.434, indicating that years with more jobs generally had lower poverty rates. The downward regression line supports this relationship. Compared with construction spending, employment has a stronger negative correlation with poverty. However, the points still show considerable variation, suggesting that the number of jobs alone cannot fully explain changes in poverty rates.
+
+## 5. Construction Spending Over Time
+
+We use a line graph to examine how construction spending changed between 2002 and 2024.
+
+```{r construction-trend}
+plot(
+  data$year,
+  construction,
+  type = "o",
+  pch = 16,
+  col = "blue",
+  main = "U.S. Construction Spending (2002-2024)",
+  xlab = "Year",
+  ylab = "Construction Spending (Billion 2024 USD)"
+)
+```
+
+Real construction spending increased from approximately $100.25 billion in 2002 to $148.34 billion in 2024. Spending grew during the mid-2000s, declined after 2009, and remained relatively stable during much of the 2010s. After 2021, construction spending increased sharply and reached its highest level in 2024. Since these values are adjusted for inflation, the graph shows changes in real spending rather than changes caused only by rising prices.
+
+## 6. Employment Over Time
+
+This graph shows changes in the number of payroll jobs in the United States.
+
+```{r employment-trend}
+plot(
+  data$year,
+  data$jobs_millions,
+  type = "o",
+  pch = 16,
+  col = "blue",
+  main = "U.S. Employment (2002-2024)",
+  xlab = "Year",
+  ylab = "Number of Jobs (Millions)"
+)
+```
+
+Employment generally increased from approximately 130.6 million jobs in 2002 to 157.7 million in 2024. However, the graph shows two noticeable declines. The first occurred around 2008–2010, during the Great Recession. The second occurred in 2020, during the COVID-19 pandemic. Employment recovered after both declines and reached its highest level in 2024. These changes suggest that employment is sensitive to major economic disruptions.
+
+## 7. Correlation Analysis
+
+We calculate correlations to examine the strength and direction of the linear relationships between our variables.
+
+```{r correlation}
+cor_matrix <- cor(variables)
+
+round(cor_matrix, 3)
+
+write.csv(
+  cor_matrix,
+  "results/correlation_matrix.csv"
+)
+```
+The correlation matrix shows three important relationships. First, construction spending and poverty have a weak negative correlation of -0.214. Second, employment and poverty have a moderate negative correlation of -0.434. This suggests that employment has a stronger linear relationship with poverty than construction spending does. Third, construction spending and employment have a strong positive correlation of 0.791. This indicates that the two economic variables often increase together. However, these correlations do not establish causation, and common trends over time may influence the results.
+
+## 8. Preliminary Regression Analysis
+
+We use a multiple linear regression model to examine how construction spending and employment are jointly associated with poverty rates.
+
+```{r regression}
+model <- lm(
+  poverty_pct ~ construction_real_2024_musd + jobs_millions,
+  data = data
+)
+
+summary(model)
+
+capture.output(
+  summary(model),
+  file = "results/preliminary_regression.txt"
+)
+```
+
+The multiple linear regression model examines construction spending and employment together as predictors of poverty rates. The model has an R-squared value of 0.2327, meaning it explains approximately 23.3% of the variation in poverty rates in our dataset. Employment has a negative coefficient and a p-value of 0.0391, which indicates a statistically significant negative association at the 5% level. Construction spending has a positive coefficient and a p-value of 0.2933, which is not statistically significant.
+
+These findings suggest that employment is more strongly associated with poverty rates than construction spending in our preliminary model. However, the overall model has a p-value of 0.0707, which is above 0.05. With only 23 annual observations, the results should be interpreted carefully. The model also needs further testing before we can determine whether it can reliably predict future poverty rates.
+
+## 9. Plans for Further Analysis
+
+For the next stage of our project, we plan to examine whether construction spending and employment can reliably predict poverty rates in the United States.
+
+First, we will further evaluate our multiple linear regression model by examining its coefficients, R-squared value, and statistical significance. We will also examine the relationship between our two explanatory variables because construction spending and employment have a relatively strong positive correlation.
+
+Second, we plan to investigate whether changes in construction spending and employment are associated with changes in poverty rates in later years. This may help us understand whether economic changes have delayed relationships with poverty.
+
+Our current results suggest that employment has a stronger relationship with poverty than construction spending. 

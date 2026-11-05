@@ -1,0 +1,21 @@
+
+Call:
+lm(formula = poverty_pct ~ construction_real_2024_musd + jobs_millions, 
+    data = data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.9309 -0.7789 -0.3248  0.6201  2.0480 
+
+Coefficients:
+                              Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                  2.457e+01  4.504e+00   5.455 2.44e-05 ***
+construction_real_2024_musd  3.724e-05  3.450e-05   1.079   0.2933    
+jobs_millions               -1.093e-01  4.948e-02  -2.208   0.0391 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.219 on 20 degrees of freedom
+Multiple R-squared:  0.2327,	Adjusted R-squared:  0.156 
+F-statistic: 3.033 on 2 and 20 DF,  p-value: 0.07071
+
