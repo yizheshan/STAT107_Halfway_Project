@@ -8,7 +8,7 @@ output: html_document
 ``` {r, include=FALSE}
 #Loads all the stuff
 source("00_requirements.R")
-source("02_funct_Plots.R")
+source("02_Functions.R")
 
 data <- read.csv("data/processed/us_annual_2002_2024.csv")
 ```
