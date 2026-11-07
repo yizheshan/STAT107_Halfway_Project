@@ -49,7 +49,35 @@ Missing values were removed.
 5. A final recheck is done for duplicate years and missing or negative values and saved to "us_annual_2002_2024.csv"
 
 
+Our final dataset has 23 observations, and the variables:
+'year', 'construction_nominal_musd', 'construction_real_2024_musd', 'jobs_thousands', 'jobs_millions', 'cpi_index', and 'poverty_pct'. 
+Our analysis checks 'poverty_pct', 'construction_real_2024_musd', and 'jobs_thousands' + 'jobs_millions'
 
+** Summary Statistics**
+
+```{r}
+
+# Keeps only 3 variables we care about
+
+vars <- data[, c("poverty_pct", "construction_real_2024_musd", "jobs_millions")]
+
+# Millions to billions
+
+vars$construction_real_2024_musd <- vars$construction_real_2024_musd/1000
+
+#function to give us basic summary stats
+describe <- function(x) {
+  c(N = length(x), Mean = mean(x), SD = sd(x), Min = min(x), Max = max(x))
+}
+
+# apply to each column
+desc <- apply(vars, MARGIN = 2, FUN = describe)
+
+# Give columns names and round
+colnames(desc) <- c("Poverty rate (%)", "Construction (billion 2024 USD)", "Jobs (millions)")
+round(desc, 2)
+
+```
 # Visualization
 
 INTERPRETATION OF VISUALIZATION
