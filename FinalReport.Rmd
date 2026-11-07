@@ -19,14 +19,19 @@ jobs         <- data$jobs_millions
 ```
 
 # Abstract
-Here
+This project asks whether highway and street construction spending and the number of jobs predict the poverty rate in the US. We created a dataset for 2002-2024 using public data. We gathered highway and street construction spending, total nonfarm payroll jobs, and the Census Bureau's poverty rate estimate. Povertyrose from 12.1 in 2002 to a peak of 15.9% after the 2008 recession in 2011-2012. Then fell to 11.9% in 2020.
+Years with more jobs tend to have lower poverty with a correlation of -0.45, jobs alone explain about 19% of the variation in poverty. Construction spending has a weaker correlation with -0.21. That relationship depends only on 2023 and 2024. The two predictors are highly correlated with eachother .79.
 
 # Introduction
 
 The poverty rate is one of the most widely used metrics for economic well-being. We also understand governments spend large amounts on infrastructure, and spending is defended with creating jobs and supporting economies. Does infrastructure construction however and the number of jobs predict poverty rates in the United States?
 
 # Executive Summary
-Here
+**Jobs matter more than construction** Jobs Correlation -0.43, COnstruction -0.23
+**Poverty Follows Economy** It peaks at 15.9% in 2011-2012 after the great recession and its low in 2020 of 11.9%.
+
+**The predictors overlap.** COnstruction and Jobs are correlatied at .79
+
 
 # Data
 All of our Data comes from Federal Reserve Economic Data, a database ran by the Federal Reserve Bank of St. Louis. The other statistics are provided by the U.S. Census Bureau and the Bureau of Labor Statistics. 
