@@ -55,7 +55,7 @@ Our analysis checks 'poverty_pct', 'construction_real_2024_musd', and 'jobs_thou
 
 ** Summary Statistics**
 
-```{r}
+```{r include=FALSE}
 
 # Keeps only 3 variables we care about
 
@@ -79,6 +79,20 @@ round(desc, 2)
 
 ```
 # Visualization
+
+**Poverty over time.** Figure 1 shows that poverty did not move in one direction. It rose, then exploded after the 2008 Recession, to a peak of 15.9& in 2011 and 2012. Then declined to 11.9% in 2020.
+
+#### INSERT PLOT HERE
+
+**Construction spending and jobs overtime.** Figure 2 shows that both predictors grew in different patterns. Jobs fell in the 2008 Recession, and again in 2020 during Covid-19, recovering after each drop. Real construction spending rose until the 2008 Recession, dipped in the 2010s, and then jumped sharply in 2023 and 2024. Comparing figure 1 and figure 2 shows two useful patterns. Poverty kept rising until 2011, even though jobs bottomed out at 2010, which suggests poverty responds to the job market but with a 1-2 year delay. Poverty reached its lowest value in 2020, the same year jobs dropped. Which suggest outside factors affect poverty, which we assume is Covid-19
+
+### INSERT PLOT HERE
+
+**Relationships with poverty** Figure 3 plots poverty against each predictor with a fitted regression line. Both of the lines slope down, but the points are scattered. The jobs scatterplot shows a clearer downward pattern however. The construction scatterplot, shows the two years with the highest spending, 2023 and 2024, sit far to the right of the other points and both have low poverty, so their influence on the line is large.
+
+### INSERT PLOTS HERE
+
+**Correlations**:
 
 INTERPRETATION OF VISUALIZATION
 
