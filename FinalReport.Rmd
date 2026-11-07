@@ -24,7 +24,14 @@ The poverty rate is one of the most widely used metrics for economic well-being.
 Here
 
 # Data
-All of our Data comes from Federal Reserve Economic Data, a database ran by the Federal Reserve Bank of St. Louis. The other statistics are provided by the U.S. Census Bureau and the Bureau of Labor Statistics. We downloaded four serieses as CSV files and our original files are in "data/raw/"
+All of our Data comes from Federal Reserve Economic Data, a database ran by the Federal Reserve Bank of St. Louis. The other statistics are provided by the U.S. Census Bureau and the Bureau of Labor Statistics. 
+
+We downloaded four serieses as CSV files and our original files are in "data/raw/":
+
+**TLHWCON**: Total highway and street construction spending (Census Bureau). Monthly, in millions of dollars
+**PAYEMS**: Total nonfarm payroll employment (Bureau of Labor Statistics). Monthly, in millions of dollars
+**PPAAUS00000A156NCEN**: Poverty rate for all ages, from the Small Area Income and Poverty Estimates (Census Bureau). Annual, in percent of people
+**CPIAUCSL**: Consumer Price Index for All Urban Consumers. (Bureau of Labor Statistics). Monthly, as an index
 
 
 # Visualization
