@@ -24,7 +24,8 @@ The poverty rate is one of the most widely used metrics for economic well-being.
 Here
 
 # Data
-Here
+All of our Data comes from Federal Reserve Economic Data, a database ran by the Federal Reserve Bank of St. Louis. The other statistics are provided by the U.S. Census Bureau and the Bureau of Labor Statistics. We downloaded four serieses as CSV files and our original files are in "data/raw/"
+
 
 # Visualization
 
