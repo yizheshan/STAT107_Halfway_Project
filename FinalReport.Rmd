@@ -33,6 +33,22 @@ We downloaded four serieses as CSV files and our original files are in "data/raw
 **PPAAUS00000A156NCEN**: Poverty rate for all ages, from the Small Area Income and Poverty Estimates (Census Bureau). Annual, in percent of people
 **CPIAUCSL**: Consumer Price Index for All Urban Consumers. (Bureau of Labor Statistics). Monthly, as an index
 
+**Cleaning and Processing** All of our steps are seen in "11_DataCleaning_Processing.Rmd", using functions from "02_Functions.R"
+
+1. Each file was read, and checked for errors and duplicates, missing values were counted.
+Poverty Series was missing: 1990, 1991, 1992, and 1994.
+CPI series is missing October 2025.
+Missing values were removed.
+
+2. A year was kept only if all 12 months were present. Construction spending was summed up to get a yearly spending. Monthly jobs and CPI values were averaged for all 12 months. This is to keep it matching to our poverty rate
+
+3. We adjusted Construction spending into 2024 dollars using the CPI for each year.
+
+4. We matched each by year, and if one of the series was missing a year, we removed it. The dataseries thus starts in 2002 and ends in 2024.
+
+5. A final recheck is done for duplicate years and missing or negative values and saved to "us_annual_2002_2024.csv"
+
+
 
 # Visualization
 
