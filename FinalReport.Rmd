@@ -2,7 +2,7 @@
 title: "Do Construction Spending and Jobs predict U.S Poverty Rates?"
 author: "Seth Castorillo M, and Tiger"
 date: "November 6, 2026"
-output: html_document
+output: pdf_document
 ---
 
 ``` {r, include=FALSE}
@@ -19,12 +19,14 @@ jobs         <- data$jobs_millions
 ```
 
 # Abstract
-This project asks whether highway and street construction spending and the number of jobs predict the poverty rate in the US. We created a dataset for 2002-2024 using public data. We gathered highway and street construction spending, total nonfarm payroll jobs, and the Census Bureau's poverty rate estimate. Povertyrose from 12.1 in 2002 to a peak of 15.9% after the 2008 recession in 2011-2012. Then fell to 11.9% in 2020.
+This project asks whether highway and street construction spending and the number of jobs predict the poverty rate in the US. We created a dataset for 2002-2024 using public data. We gathered highway and street construction spending, total nonfarm payroll jobs, and the Census Bureau's poverty rate estimate. Poverty rose from 12.1 in 2002 to a peak of 15.9% after the 2008 recession in 2011-2012. Then fell to 11.9% in 2020.
 Years with more jobs tend to have lower poverty with a correlation of -0.45, jobs alone explain about 19% of the variation in poverty. Construction spending has a weaker correlation with -0.21. That relationship depends only on 2023 and 2024. The two predictors are highly correlated with eachother .79.
 
 # Introduction
 
 The poverty rate is one of the most widely used metrics for economic well-being. We also understand governments spend large amounts on infrastructure, and spending is defended with creating jobs and supporting economies. Does infrastructure construction however and the number of jobs predict poverty rates in the United States?
+
+This analysis may benefit policymakers and the public, who want to know whether construction spending and job growth are connected to poverty. We are not proving cause and effect however. Instead, we describe how each variable overtime, measure how the predictors are related to poverty, and fit regression models to see how much variation in poverty is explained by the predictors.
 
 # Executive Summary
 **Jobs matter more than construction** Jobs Correlation -0.43, COnstruction -0.23
@@ -65,7 +67,7 @@ Our analysis checks 'poverty_pct', 'construction_real_2024_musd', and 'jobs_mill
 
 ** Summary Statistics**
 
-```{r include=FALSE}
+```{r echo=FALSE}
 
 # Keeps only 3 variables we care about
 
@@ -90,6 +92,9 @@ round(desc, 2)
 
 ```
 # Visualization
+Visualization Plans:
+We need to add histograms of each variable, box plots, and scatter plots of year to year and residual plots.
+
 
 **Poverty over time.** Figure 1 shows that poverty did not move in one direction. It rose, then exploded after the 2008 Recession, to a peak of 15.9& in 2011 and 2012. Then declined to 11.9% in 2020.
 
@@ -164,7 +169,15 @@ print(simple_table)
 
 
 
-# Analysis
+# Analysis Plan 
+
+1. Create a multiple linear regression
+2. Check year to year changes
+3. Check out delayed effects
+4. See how years like 2020 change the correlation
+
+We expect jobs to stay negatively related to poverty.
 
 
-**Preliminary Model** We fit a multiple linear regression of the poverty rate on real construction spending and jobs.
+
+
