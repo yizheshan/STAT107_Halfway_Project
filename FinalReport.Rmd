@@ -1,5 +1,20 @@
 ---
-title: "FinalReport"
+title: "Do Construction Spending and Jobs predict U.S Poverty Rates?"
+author: "Seth Castorillo M, and Tiger"
+date: "November 6, 2026"
 output: html_document
 ---
+
+``` {r, include=FALSE}
+#Loads all the stuff
+source("00_requirements.R")
+source("03_funct_Plots.R")
+
+data <- read.csv("data/processed/us_annual_2002_2024.csv")
+```
+
+
+# Introduction
+
+The poverty rate is one of the most widely used metrics for economic well-being. We also understand governments spend large amounts on infrastructure, and spending is defended with creating jobs and supporting economies. Does infrastructure construction however and the number of jobs predict povert rates in the United States?
 
